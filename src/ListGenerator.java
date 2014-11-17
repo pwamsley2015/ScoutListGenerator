@@ -74,20 +74,20 @@ public class ListGenerator {
 
 		ArrayList<ArrayList<Team>> lists = listGen.generateLists(listGen.getNumScouts(), matchSchedList);
 
-		//System.out.println(lists);
+		System.out.println(lists);
 
-		int okayToPrint = JOptionPane.showConfirmDialog(null, 
-				"Lists will now to try to print to your default printer."
-						+ "\nIs this okay?"); 
-
-		if (okayToPrint == JOptionPane.YES_OPTION) {
-			for (ArrayList<Team> list : lists) {
-				ListCard cardToPrint = new ListCard(list); 
-				cardToPrint.printCard();
-			}
-		} else {
-			System.out.println("Was not allowed to print lists.");
-		}
+		//		int okayToPrint = JOptionPane.showConfirmDialog(null, 
+		//				"Lists will now to try to print to your default printer."
+		//						+ "\nIs this okay?"); 
+		//
+		//		if (okayToPrint == JOptionPane.YES_OPTION) {
+		//			for (ArrayList<Team> list : lists) {
+		//				ListCard cardToPrint = new ListCard(list); 
+		//				cardToPrint.printCard();
+		//			}
+		//		} else {
+		//			System.out.println("Was not allowed to print lists.");
+		//		}
 	}
 
 	public ArrayList<ArrayList<Team>> generateLists(int numScouts, ArrayList<Match> matchSched) {
@@ -138,17 +138,18 @@ public class ListGenerator {
 		if (powerTeamPositions.size() <= numScouts) 
 			for (int i = 0; i < powerTeamPositions.size(); i++)
 				lists.get(i).add(teamList.get(powerTeamPositions.get(i))); //add the first powerhouse team to the first list...
-		else  { //more powerhouse teams than scouts or number of lists (atm this works only if there are less than double + 1) 
-			int i; 
-			for (i = 0; i < numScouts; i++) 
-				lists.get(i).add(teamList.get(powerTeamPositions.get(i)));
-			for (int j = 0; j < numScouts; j++) {
-				try {
-					lists.get(j).add(teamList.get(powerTeamPositions.get(i))); 
-					i++; 
-				} catch (IndexOutOfBoundsException outOfPowerHouseTeams) {
-					break; 
-				}
+		else  { //more powerhouse teams than scouts or number of lists
+
+			int numsTeamsPlaced = 0; 
+			int currListPos = 0; 
+
+			while (numsTeamsPlaced < powerTeamPositions.size()) {
+
+				System.out.println(teamList.get(powerTeamPositions.get(numsTeamsPlaced)));
+				lists.get(currListPos).add(teamList.get(powerTeamPositions.get(numsTeamsPlaced))); 
+
+				numsTeamsPlaced++; 
+				currListPos = this.nextPos(currListPos); 
 			}
 		}
 
@@ -158,9 +159,9 @@ public class ListGenerator {
 	}
 
 	private int nextPos(int n) {
-		return ++n % (numScouts + 1);
+		return ++n % numScouts;
 	}
-	
+
 	public String getCsv() {
 		return csvString; 
 	}

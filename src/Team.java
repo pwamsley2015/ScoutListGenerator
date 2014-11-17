@@ -37,6 +37,10 @@ public class Team {
 		return ((Team)obj).teamNum == this.teamNum; 
 	}
 	@Override
+	public int hashCode() {
+		return 0; 
+	}
+	@Override
 	public String toString() {
 		return "" + teamNum;
 	}

@@ -7,7 +7,10 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 
-
+/**
+ * @author Patrick Wamsley
+ * This class is used to print lists
+ */
 public class ListCard implements Printable {
 
 	private ArrayList<Team> listCard; 
@@ -18,7 +21,8 @@ public class ListCard implements Printable {
 	}
 
 	@Override
-	public int print(Graphics g, PageFormat pageFormat, int pageIndex) throws PrinterException {
+	public int print(Graphics g, PageFormat pageFormat, int pageIndex) 
+			throws PrinterException {
 
 		if (pageIndex > 0) 
 			return NO_SUCH_PAGE;
@@ -36,7 +40,6 @@ public class ListCard implements Printable {
 
 			g.drawString(currTeam.toString(), 50, currY); 
 			currY += 20; 
-
 		}
 		return PAGE_EXISTS;
 	}
