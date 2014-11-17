@@ -26,5 +26,8 @@ public class Match {
 	public String toString() {
 		return "Match " + matchNum + ": " + teams.toString(); 
 	}
+	public ArrayList<Team> getTeamsInMatch() {
+		return teams; 
+	}
 	
 }
