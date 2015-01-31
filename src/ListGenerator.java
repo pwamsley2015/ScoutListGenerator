@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -11,7 +12,6 @@ import javax.swing.JOptionPane;
 
 /**
  * @author Patrick Wamsley
- * @author Michael Maunu
  *
  * Generates lists containting teams for scouts
  */
@@ -22,9 +22,13 @@ public class ListGenerator {
 
 	private String csvString; 
 
+	private ArrayList<Scout> scouts; 
+
 	public ListGenerator(String file, int numScouts) {
 		this.numScouts = numScouts; 
 		matchSchedFile = new File(file); 
+
+		scouts = new ArrayList<Scout>(); 
 
 		try {
 			loadString();
@@ -33,6 +37,9 @@ public class ListGenerator {
 		} 
 	}
 	public ListGenerator() {
+
+		scouts = new ArrayList<Scout>(); 
+
 		numScouts = Integer.parseInt(JOptionPane.
 				showInputDialog("How many scouts do we have?")); 
 
@@ -45,67 +52,15 @@ public class ListGenerator {
 		} 
 	}
 
-	/**
-	 * @param optional arguements from command line: filePath numScouts
-	 */
-	public static void main(String[] args) {
+	public ArrayList<ArrayList<Team>> generateLists(int numScouts, ArrayList<Match> matchSched, int... recursionCount) {
 
-		ListGenerator listGen; 
-
-		//---if given params from command line---//
-		if (args.length != 0) {
-			try {
-				listGen = new ListGenerator(args[0], Integer.parseInt(args[1])); 
-			} catch (Exception e) {
-				System.out.println("args not given correctly.");
-				listGen = new ListGenerator(); 
-			}
-		} else 
-			listGen = new ListGenerator(); 
-
-		ArrayList<Match> matchSchedList = null; 
-
-		try {
-			matchSchedList = CsvParser.getMatchSchedList(listGen.getCsv());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} 	
-		//now we have an ArrayList which has all the matches in it
-
-		ArrayList<ArrayList<Team>> lists = listGen.generateLists(listGen.getNumScouts(), matchSchedList);
-
-		System.out.println(lists);
-
-		//		int okayToPrint = JOptionPane.showConfirmDialog(null, 
-		//				"Lists will now to try to print to your default printer."
-		//						+ "\nIs this okay?"); 
-		//
-		//		if (okayToPrint == JOptionPane.YES_OPTION) {
-		//			for (ArrayList<Team> list : lists) {
-		//				ListCard cardToPrint = new ListCard(list); 
-		//				cardToPrint.printCard();
-		//			}
-		//		} else {
-		//			System.out.println("Was not allowed to print lists.");
-		//		}
-	}
-
-	public ArrayList<ArrayList<Team>> generateLists(int numScouts, ArrayList<Match> matchSched) {
-
+		System.out.println(recursionCount.length);
+		
 		ArrayList<ArrayList<Team>> lists = new ArrayList<ArrayList<Team>>(); 
 		ArrayList<Team> teamList = new ArrayList<Team>(); 
 
 		for (int i = 0; i < numScouts; i++) 
 			lists.add(new ArrayList<Team>()); //now we just need to fill those lists
-
-		/*
-		 * 1) get team List (no repeats)
-		 * 2) divide up power house teams
-		 * 3) place all the other teams
-		 * 4) test stregnth of that list
-		 * 5) repeat until finds the best one
-		 * 6) return best one
-		 */
 
 		//---part 1---// 
 		for (Match match : matchSched) {
@@ -129,6 +84,7 @@ public class ListGenerator {
 
 		//---part two---//
 		ArrayList<Integer> powerTeamPositions = new ArrayList<Integer>(); 
+		int currListPos = 0;
 
 		for (int i = 0; i < teamList.size(); i++) {
 			Team team = teamList.get(i); 
@@ -136,17 +92,18 @@ public class ListGenerator {
 				powerTeamPositions.add(i); 
 		}
 		if (powerTeamPositions.size() <= numScouts) 
-			for (int i = 0; i < powerTeamPositions.size(); i++)
-				lists.get(i).add(teamList.get(powerTeamPositions.get(i))); //add the first powerhouse team to the first list...
+			for (; currListPos < powerTeamPositions.size(); currListPos++)
+				lists.get(currListPos).add(teamList.get(
+						powerTeamPositions.get(currListPos))); 
+
 		else  { //more powerhouse teams than scouts or number of lists
 
 			int numsTeamsPlaced = 0; 
-			int currListPos = 0; 
 
 			while (numsTeamsPlaced < powerTeamPositions.size()) {
 
-				System.out.println(teamList.get(powerTeamPositions.get(numsTeamsPlaced)));
-				lists.get(currListPos).add(teamList.get(powerTeamPositions.get(numsTeamsPlaced))); 
+				lists.get(currListPos).add(teamList.get(
+						powerTeamPositions.get(numsTeamsPlaced))); 
 
 				numsTeamsPlaced++; 
 				currListPos = this.nextPos(currListPos); 
@@ -155,9 +112,82 @@ public class ListGenerator {
 
 		//---part three---//
 
+		//store this because we'll need it later
+		ArrayList<Team> remainingTeams = new ArrayList<Team>(); 
+
+		for (Team team : teamList) 
+			if (!(team.isPowerHouseTeam()))
+				remainingTeams.add(team); 
+
+		for (Team team : remainingTeams) {
+			lists.get(currListPos).add(team);
+			currListPos = nextPos(currListPos); 
+		}
+
+		findConflicts(lists, matchSched);
+
+		for (Scout scout : scouts) {
+//			System.out.println(scout);
+//			System.out.println("conflicts: " + scout.getNumConflicts());
+//			
+			ArrayList<Integer> conflictPositions = new ArrayList<Integer>(); 
+			
+			if (scout.getNumConflicts() > 3) {
+				ArrayList<Team> scoutsTeamList = scout.getTeamList(); 
+				for (int i = 0; i < scoutsTeamList.size(); i++) {
+					Team team = scoutsTeamList.get(i); 
+					if (team.isConflict())
+						conflictPositions.add(i); 
+				}
+				for (int pos : conflictPositions) {
+					
+					int listIndex = pos % numScouts; 
+					int teamIndex = pos & lists.get(pos % numScouts).size() - 1; 
+					
+					Team toSwap = scoutsTeamList.get(pos); 
+					Team other = lists.get(listIndex).get(teamIndex); 
+					
+					scoutsTeamList.set(pos, other); 
+					lists.get(listIndex).set(teamIndex, toSwap);
+				}
+				System.out.println("trying again");
+				
+				if (recursionCount.length >= 15) {
+					System.out.println("after 15 tries, can't fix the lists.");
+					return lists; 
+				}
+				
+				lists = generateLists(numScouts, matchSched, new int[recursionCount.length + 1]); 
+			}
+		}
 		return lists; 
 	}
+	public void findConflicts(ArrayList<ArrayList<Team>> lists,
+			ArrayList<Match> matches) {
 
+		for (int i = 0; i < numScouts; i++)
+			scouts.add(new Scout(lists.get(i))); 
+
+		for (Scout currScout : scouts) {
+
+			ArrayList<Team> teamList = currScout.getTeamList(); 
+
+			for (Match match : matches) {
+				ArrayList<Team> teamsInMatch = match.getTeamsInMatch(); 
+
+				int count = 0; 
+				for (Team teamFromTeamList : teamList) {
+					if (teamsInMatch.contains(teamFromTeamList)) {
+						count++; 
+						if (count > 1)
+							teamFromTeamList.setCausesConflict(true); 
+					}
+				}
+				if (count > 1)
+					currScout.increaseNumConflicts(); 
+			}
+		}
+	}
 	private int nextPos(int n) {
 		return ++n % numScouts;
 	}

@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 /**
  * @author Patrick Wamsley
- * @author Michael Maunu
  *
  * This class represents a Team
  */
@@ -14,6 +13,8 @@ public class Team {
 	private ArrayList<Match> matches; 
 
 	private boolean isPowerHouseTeam; 
+	
+	private boolean causesConflict; 
 
 	private static int[] POWER_HOUSE_TEAMS = 
 		{2485, 987, 254, 3476
@@ -28,6 +29,16 @@ public class Team {
 	public Team(int teamNum) {
 		this.teamNum = teamNum; 
 		assignPowerHouse(); 
+		
+		causesConflict = false; 
+	}
+	
+	public boolean isConflict() {
+		return causesConflict; 
+	}
+	
+	public void setCausesConflict(boolean b) {
+		causesConflict = b; 
 	}
 
 	@Override
@@ -38,7 +49,7 @@ public class Team {
 	}
 	@Override
 	public int hashCode() {
-		return 0; 
+		return teamNum; 
 	}
 	@Override
 	public String toString() {

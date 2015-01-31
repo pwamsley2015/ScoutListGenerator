@@ -4,9 +4,8 @@ import java.util.ArrayList;
 
 /**
  * @author Patrick Wamsley
- * @author Michael Maunu
  *
- * This class handles parsing comma seperated values 
+ * This class handles parsing csv's
  */
 public class CsvParser {
 

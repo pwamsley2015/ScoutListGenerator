@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 /**
  * @author Patrick Wamsley
- * @author Michael Maunu
  *
  * This class represents a match, a game played in competition.
  * 
