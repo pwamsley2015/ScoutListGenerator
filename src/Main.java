@@ -26,7 +26,7 @@ public class Main {
 		ArrayList<Match> matchSchedList = null; 
 
 		try {
-			matchSchedList = CsvParser.getMatchSchedList(listGen.getCsv());
+			matchSchedList = CsvParser.getMatchSchedule(listGen.getCsv());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} 	

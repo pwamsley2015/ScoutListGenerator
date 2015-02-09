@@ -1,32 +1,35 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
-/**
- * @author Patrick Wamsley
- *
- * This class represents a match, a game played in competition.
- * 
- * Each match object has a list of 6 teams that are playing in the match
- */
+
 public class Match {
 
-	private ArrayList<Team> teams; 
-
-	private static int totalMatchNums; 
-	private int matchNum; 
+	private ArrayList<Team> teamsInMatch; 
+	public final int matchNum; 
 	
-	public Match(ArrayList<Team> teams) {
+	public Match(int matchNum, ArrayList<Team> teamsInMatch) {
+		if (teamsInMatch.size() != 6)
+			throw new IllegalArgumentException("When constructing a match object, you need to give it 6 teams."); 
 		
-		totalMatchNums++; 
-		matchNum = totalMatchNums; 
-		
-		this.teams = teams; 
+		this.teamsInMatch = teamsInMatch; 
+		this.matchNum = matchNum; 
 	}
+	
+	//in case you want to construct one with 6 cs Teams rather than an arraylist
+	public Match(int matchNum, Team... teams) {
+		this(matchNum, new ArrayList<Team>(Arrays.asList(teams))); 
+	}
+	
 	@Override 
 	public String toString() {
-		return "Match " + matchNum + ": " + teams.toString(); 
-	}
-	public ArrayList<Team> getTeamsInMatch() {
-		return teams; 
+		return "Match " + matchNum + ": " + teamsInMatch.toString();
 	}
 	
+	public ArrayList<Team> getTeamsInMatch() {
+		return teamsInMatch; 
+	}
+
+	public int getMatchNum() {
+		return matchNum;
+	}
 }

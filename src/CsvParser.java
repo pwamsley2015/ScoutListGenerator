@@ -12,52 +12,59 @@ public class CsvParser {
 	//---ensure that this is a static class---//
 	private CsvParser() {}
 
-	public static ArrayList<Match> getMatchSchedList(String matchSchedCsv)
-			throws ParseException {
+	public static ArrayList<Match> getMatchSchedule(String csv) 
+		throws ParseException { 
 
-		matchSchedCsv = matchSchedCsv.substring(0,matchSchedCsv.length() - 4) + ","; //makes the while loop work correctly
-
-		ArrayList<Match> returnList = new ArrayList<Match>(); 
-		ArrayList<String> stringList = new ArrayList<String>(); 
-
+		ArrayList<String> lines = new ArrayList<>(); 
+		ArrayList<Match> returnList = new ArrayList<>(); 
+		
+		//get an arraylist of lines, each containing: Qualn, t1, t2, t3, t4, t5, t6
 		while (true) {
 			try {
-				int firstCommaPos = matchSchedCsv.indexOf(","); 
-				String firstString = matchSchedCsv.substring(0, firstCommaPos); 
-
-				stringList.add(firstString);
-				matchSchedCsv = matchSchedCsv.substring(firstCommaPos + 1); 
+				String currLine = csv.substring(0, csv.indexOf("null")); 
+				lines.add(currLine); 
+				csv = csv.substring(csv.indexOf("null") + 4); 
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				break; 
 			}
 		}
-//		System.out.println(stringList);
-		/* 
-		 * now we have an arrayList of all those strings
-		 * something like:
-		 * 
-		 * [qual1,2485,254,987,3476,1538,1114,qual2...] 
-		 */
-
-		//---fill returnList with match Objects---// 
+		
+		//first line is special case, deal with that first
+		String firstLineWorker = lines.get(0).substring(8); //now we have something like: 4574,2193,3881,589,3749,2102
+		Team[] firstGameTeams = new Team[6]; 
+		for (int i = 0; i < 5; i++) {
+			String teamNumString = firstLineWorker.substring(0, firstLineWorker.indexOf(',')); 
+			firstGameTeams[i] = new Team(Integer.parseInt(teamNumString)); 
+			firstLineWorker = firstLineWorker.substring(firstLineWorker.indexOf(',') + 1); 
+		}
+		firstGameTeams[5] = new Team(Integer.parseInt(firstLineWorker)); 
+		returnList.add(new Match(1, firstGameTeams)); 
+		
+		//now do the rest of them... 
+		int curr = 1; 
 		while (true) {
 			try {
-				ArrayList<Team> teamsInMatch = new ArrayList<Team>(); 
-
-				for (int pos = 1; teamsInMatch.size() != 6; pos++) 
-					teamsInMatch.add(new Team(Integer.parseInt(stringList.get(pos)))); 
-				returnList.add(new Match(teamsInMatch)); 
-
-				for (int i = 0; i <= 6; i++) 
-					stringList.remove(0); 
+				String lineWorker = lines.get(curr);
+				lineWorker = lineWorker.substring(lineWorker.indexOf(',') + 1); 
+				Team[] teams = new Team[6]; 
+				for (int i = 0; i < 5; i++) {
+					String teamNumString = lineWorker.substring(0, lineWorker.indexOf(',')); 
+					teams[i] = new Team(Integer.parseInt(teamNumString)); 
+					lineWorker = lineWorker.substring(lineWorker.indexOf(',') + 1); 
+				}
+				teams[5] = new Team(Integer.parseInt(lineWorker)); 
+				returnList.add(new Match(curr + 1, teams)); 
+			} catch(Exception e) {
+//				e.printStackTrace();
+				break; 
 			}
-			catch (Exception e) {
-				break;
-			}
+			curr++; 
 		}
+		
 		if (returnList.size() == 0)
-			throw new ParseException("Failed to parse the csv String. *program explodes*", -1); 	
+			throw new ParseException("failed to parse match sched csv.", -1);  
+		
 		return returnList; 
 	}
 }

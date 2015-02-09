@@ -6,9 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.Collections; 
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
 
 /**
  * @author Patrick Wamsley
@@ -127,35 +129,15 @@ public class ListGenerator {
 		findConflicts(lists, matchSched);
 
 		for (Scout scout : scouts) {
-//			System.out.println(scout);
-//			System.out.println("conflicts: " + scout.getNumConflicts());
-//			
-			ArrayList<Integer> conflictPositions = new ArrayList<Integer>(); 
-			
-			if (scout.getNumConflicts() > 3) {
-				ArrayList<Team> scoutsTeamList = scout.getTeamList(); 
-				for (int i = 0; i < scoutsTeamList.size(); i++) {
-					Team team = scoutsTeamList.get(i); 
-					if (team.isConflict())
-						conflictPositions.add(i); 
-				}
-				for (int pos : conflictPositions) {
-					
-					int listIndex = pos % numScouts; 
-					int teamIndex = pos & lists.get(pos % numScouts).size() - 1; 
-					
-					Team toSwap = scoutsTeamList.get(pos); 
-					Team other = lists.get(listIndex).get(teamIndex); 
-					
-					scoutsTeamList.set(pos, other); 
-					lists.get(listIndex).set(teamIndex, toSwap);
-				}
-				System.out.println("trying again");
+		
+			if (scout.getNumConflicts() > 18) {
 				
-				if (recursionCount.length >= 15) {
-					System.out.println("after 15 tries, can't fix the lists.");
-					return lists; 
-				}
+				Collections.shuffle(matchSched); 
+				
+//				if (recursionCount.length >= 100) {
+//					System.out.println("after 100 tries, can't fix the lists.");
+//					return lists; 
+//				}
 				
 				lists = generateLists(numScouts, matchSched, new int[recursionCount.length + 1]); 
 			}
@@ -214,7 +196,7 @@ public class ListGenerator {
 		finally {
 			scanner.close();
 		}
-	}
+	}  
 
 	private void pickFile() {
 
