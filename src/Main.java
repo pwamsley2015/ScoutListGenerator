@@ -50,8 +50,12 @@ public class Main {
 				ListCard cardToPrint = new ListCard(list); 
 				cardToPrint.printCard();
 			}
-		} else 
-			System.out.println("Was not allowed to print lists.");
+		} else {
+			System.out.println("Was not allowed to print lists, printing lists to console instead.\n\n\n");
+			for (ArrayList list : lists) {
+				System.out.println(list + "\n");
+			}
+		}
 
 	}
 }

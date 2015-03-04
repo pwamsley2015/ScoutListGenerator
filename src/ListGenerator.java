@@ -54,9 +54,7 @@ public class ListGenerator {
 		} 
 	}
 
-	public ArrayList<ArrayList<Team>> generateLists(int numScouts, ArrayList<Match> matchSched, int... recursionCount) {
-
-		System.out.println(recursionCount.length);
+	public ArrayList<ArrayList<Team>> generateLists(int numScouts, ArrayList<Match> matchSched, int recursionCount) {
 		
 		ArrayList<ArrayList<Team>> lists = new ArrayList<ArrayList<Team>>(); 
 		ArrayList<Team> teamList = new ArrayList<Team>(); 
@@ -128,22 +126,27 @@ public class ListGenerator {
 
 		findConflicts(lists, matchSched);
 
-		for (Scout scout : scouts) {
-		
-			if (scout.getNumConflicts() > 18) {
-				
-				Collections.shuffle(matchSched); 
-				
-//				if (recursionCount.length >= 100) {
-//					System.out.println("after 100 tries, can't fix the lists.");
-//					return lists; 
-//				}
-				
-				lists = generateLists(numScouts, matchSched, new int[recursionCount.length + 1]); 
-			}
-		}
+//		for (Scout scout : scouts) {
+//		
+//			if (scout.getNumConflicts() > 20) {
+//				
+//				Collections.shuffle(matchSched); 
+//				
+////				if (recursionCount >= 100) {
+////					System.out.println("after 100 tries, can't fix the lists.");
+////					return lists; 
+////				}
+//				
+//				lists = generateLists(numScouts, matchSched, recursionCount + 1); 
+//			}
+//		}
 		return lists; 
 	}
+	
+	public ArrayList<ArrayList<Team>> generateLists(int numScouts, ArrayList<Match> matchSched) {
+		return generateLists(numScouts, matchSched, 0); 
+	}
+	
 	public void findConflicts(ArrayList<ArrayList<Team>> lists,
 			ArrayList<Match> matches) {
 
