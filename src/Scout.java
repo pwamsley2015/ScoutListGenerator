@@ -13,16 +13,24 @@ public class Scout {
 	private static int numScouts; 
 	private int id; 
 	
-	private int numConflicts; 
+	private static ArrayList<Team> teamsScouted = new ArrayList<>();
 	
-	public Scout(ArrayList<Team> teamsToScout) {
+	public Scout() {
 		
-		this.teamsToScout = teamsToScout;
+		teamsToScout = new ArrayList<>(); 
 		
 		numScouts++; 
 		id = numScouts; 
-		
-		numConflicts = 0; 
+	}
+	
+	public static boolean isScouted(Team t) {
+		return teamsScouted.contains(t); 
+	}
+	
+	public boolean addTeam(Team t) {
+		System.out.println("Added a team to a scout list!");
+		teamsScouted.add(t);
+		return teamsToScout.add(t); 
 	}
 	
 	public ArrayList<Team> getTeamList() {
@@ -41,13 +49,5 @@ public class Scout {
 		return "Scout #" + id + 
 				"\n Number of teams to Scout: "
 				+ teamsToScout.size(); 
-	}
-
-	public int getNumConflicts() {
-		return numConflicts; 
-	}
-	
-	public void increaseNumConflicts() {
-		numConflicts++; 
 	}
 }

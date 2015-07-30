@@ -1,225 +1,172 @@
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.Collections; 
 
-import javax.swing.JFileChooser;
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
-
-/**
- * @author Patrick Wamsley
- *
- * Generates lists containting teams for scouts
- */
 public class ListGenerator {
 
-	private int numScouts; 
-	private File matchSchedFile; 
+	/**
+	 * @param optional arguements from command line: filePath numScouts
+	 */
+	public static void main(String[] args) {
 
-	private String csvString; 
-
-	private ArrayList<Scout> scouts; 
-
-	public ListGenerator(String file, int numScouts) {
-		this.numScouts = numScouts; 
-		matchSchedFile = new File(file); 
-
-		scouts = new ArrayList<Scout>(); 
-
-		try {
-			loadString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-	}
-	public ListGenerator() {
-
-		scouts = new ArrayList<Scout>(); 
-
-		numScouts = Integer.parseInt(JOptionPane.
-				showInputDialog("How many scouts do we have?")); 
-
-		pickFile(); 
-
-		try {
-			loadString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-	}
-
-	public ArrayList<ArrayList<Team>> generateLists(int numScouts, ArrayList<Match> matchSched, int recursionCount) {
+		if (args.length != 2)
+			throw new IllegalArgumentException("Did not call this program correctly. \n "
+					+ "Command Line all must be as follows: java -j ListGenerator.jar filePathToCSV numScouts \n"); 
 		
-		ArrayList<ArrayList<Team>> lists = new ArrayList<ArrayList<Team>>(); 
-		ArrayList<Team> teamList = new ArrayList<Team>(); 
-
-		for (int i = 0; i < numScouts; i++) 
-			lists.add(new ArrayList<Team>()); //now we just need to fill those lists
-
-		//---part 1---// 
-		for (Match match : matchSched) {
-			ArrayList<Team> teamsInMatch = match.getTeamsInMatch(); 
-			for (Team team : teamsInMatch)
-				teamList.add(team); 
-		}
-
-		//get rid of duplicates
-		Set<Team> teamSet = new HashSet<Team>(teamList); 
-		teamList = new ArrayList<Team>(teamSet); 
-
-		//---Give each team object a list of matches it is playing in---//
-		for (Team team : teamList) {
-			ArrayList<Match> matchesIn = new ArrayList<Match>(); 
-			for (Match match : matchSched) 
-				if (match.getTeamsInMatch().contains(team))
-					matchesIn.add(match); 
-			team.setMatches(matchesIn);
-		}
-
-		//---part two---//
-		ArrayList<Integer> powerTeamPositions = new ArrayList<Integer>(); 
-		int currListPos = 0;
-
-		for (int i = 0; i < teamList.size(); i++) {
-			Team team = teamList.get(i); 
-			if (team.isPowerHouseTeam()) 
-				powerTeamPositions.add(i); 
-		}
-		if (powerTeamPositions.size() <= numScouts) 
-			for (; currListPos < powerTeamPositions.size(); currListPos++)
-				lists.get(currListPos).add(teamList.get(
-						powerTeamPositions.get(currListPos))); 
-
-		else  { //more powerhouse teams than scouts or number of lists
-
-			int numsTeamsPlaced = 0; 
-
-			while (numsTeamsPlaced < powerTeamPositions.size()) {
-
-				lists.get(currListPos).add(teamList.get(
-						powerTeamPositions.get(numsTeamsPlaced))); 
-
-				numsTeamsPlaced++; 
-				currListPos = this.nextPos(currListPos); 
-			}
-		}
-
-		//---part three---//
-
-		//store this because we'll need it later
-		ArrayList<Team> remainingTeams = new ArrayList<Team>(); 
-
-		for (Team team : teamList) 
-			if (!(team.isPowerHouseTeam()))
-				remainingTeams.add(team); 
-
-		for (Team team : remainingTeams) {
-			lists.get(currListPos).add(team);
-			currListPos = nextPos(currListPos); 
-		}
-
-		findConflicts(lists, matchSched);
-
-//		for (Scout scout : scouts) {
-//		
-//			if (scout.getNumConflicts() > 20) {
-//				
-//				Collections.shuffle(matchSched); 
-//				
-////				if (recursionCount >= 100) {
-////					System.out.println("after 100 tries, can't fix the lists.");
-////					return lists; 
-////				}
-//				
-//				lists = generateLists(numScouts, matchSched, recursionCount + 1); 
+		/*
+		 * First, fill up an instance of Schedule
+		 */
+		final Schedule schedule = new Schedule(CSV_Parser.getMatchSchedule(args[0])); 
+		
+		/*
+		 * Then geneate the list. 
+		 */
+		ArrayList<Scout> scoutList = generateLists(Integer.parseInt(args[1]), schedule);
+	
+		/*
+		 * Then ask if its okay to print to the default printer.
+		 */
+		int okayToPrint = JOptionPane.showConfirmDialog(null, 
+				"Lists will now to try to print to your default printer."
+						+ "\nIs this okay?"); 
+		/*
+		 * If yes, print. Otherwise we will just print to the console. 
+		 */
+		if (okayToPrint == JOptionPane.YES_OPTION) {
+//			for (ArrayList<Team> list : lists) {
+//				ListCard cardToPrint = new ListCard(list); 
+//				cardToPrint.printCard();
 //			}
-//		}
-		return lists; 
+		} else {
+			System.out.println("\nWas not allowed to print lists, printing lists to console instead.\n\n\n");
+			for (Scout list : scoutList) 
+				System.out.println(list.getTeamList() + "\n");
+		}
+
 	}
 	
-	public ArrayList<ArrayList<Team>> generateLists(int numScouts, ArrayList<Match> matchSched) {
-		return generateLists(numScouts, matchSched, 0); 
-	}
-	
-	public void findConflicts(ArrayList<ArrayList<Team>> lists,
-			ArrayList<Match> matches) {
-
-		for (int i = 0; i < numScouts; i++)
-			scouts.add(new Scout(lists.get(i))); 
-
-		for (Scout currScout : scouts) {
-
-			ArrayList<Team> teamList = currScout.getTeamList(); 
-
-			for (Match match : matches) {
-				ArrayList<Team> teamsInMatch = match.getTeamsInMatch(); 
-
-				int count = 0; 
-				for (Team teamFromTeamList : teamList) {
-					if (teamsInMatch.contains(teamFromTeamList)) {
-						count++; 
-						if (count > 1)
-							teamFromTeamList.setCausesConflict(true); 
-					}
+	private static ArrayList<Scout> generateLists(int numScouts, Schedule schedule) {
+		
+		/*
+		 * First, create the list of scouts objects.
+		 * Once we have this list, we can start assigning teams to Scouts.
+		 */
+		ArrayList<Scout> scoutList = createScoutList(numScouts); 
+		
+		/*
+		 * Before the other teams, distrute the "powerhouse" teams. 
+		 * This way all scouts will have a roughly equal fun-to-scout schedule. 
+		 */
+		int currScoutIndex = 0; //this variable keeps track of we where we are in the scoutList when we are adding teams in a loop. 
+		
+		for (Team potenialPowerhouseTeam : schedule.getAllTeams()) { //working in sets, so no worries about duplicates. 
+			if (potenialPowerhouseTeam.isPowerHouseTeam()) {
+				scoutList.get(currScoutIndex).addTeam(potenialPowerhouseTeam); 
+				currScoutIndex = nextScoutPos(currScoutIndex, numScouts); 
+			}
+		}
+		
+		System.out.println("Placed powerhouse teams!");
+		
+		/*
+		 * Now we begin adding the rest of the teams to each scout. 
+		 * 
+		 * In this first pass, we either give a scout a team,
+		 * or we add it to the conflict pool,
+		 * where we will deal with it later. 
+		 */
+		ArrayList<Conflict> conflictPool = new ArrayList<>(); 
+			
+		for (Match currMatch : schedule.getMatches()) {
+			for (Team currTeam : currMatch.getTeamsInMatch()) {
+				ArrayList<Team> conflicts = schedule.getConflicts(currTeam, scoutList.get(currScoutIndex).getTeamList());
+				if (Scout.isScouted(currTeam)) //if we've already taken care of this team, skip it.
+					continue; 
+				else if (conflicts.size() != 0) //else if (there are conflicts) ...
+					conflictPool.add(new Conflict(currMatch, currTeam, conflicts, scoutList.get(currScoutIndex))); //add to the conflictPool. We'll deal with them later.
+				else {
+					scoutList.get(currScoutIndex).addTeam(currTeam); //Othersize, we assign this Team to a scout. 
+					currScoutIndex = nextScoutPos(currScoutIndex, numScouts); 
 				}
-				if (count > 1)
-					currScout.increaseNumConflicts(); 
 			}
 		}
-	}
-	private int nextPos(int n) {
-		return ++n % numScouts;
-	}
-
-	public String getCsv() {
-		return csvString; 
-	}
-
-	public int getNumScouts() {
-		return numScouts;
-	}
-
-	private void loadString() throws IOException {
-
-		StringBuilder fileContents = new StringBuilder((int)matchSchedFile.length()); 
-		Scanner scanner = new Scanner(matchSchedFile); 
-		String lineSeperator = System.getProperty("line.seperator"); 
-
-		try {
-			while (scanner.hasNextLine())
-				fileContents.append(scanner.nextLine() + lineSeperator);
-			csvString = fileContents.toString(); 
+		
+		System.out.println("Placed the first round of other teams!");
+		
+		/*
+		 * At this point, all of the teams are either
+		 * assigned to a scout, or kept in the conflits pool. 
+		 * Now we work on placing each conflit pool team. 
+		 */		
+		boolean makingProgress = true; //true as long as conflictPool is getting smaller 
+		
+		while (makingProgress) {
+			int sizeBefore = conflictPool.size(); 
+			for (int i = 0; i < conflictPool.size(); i++) {
+				
+			Conflict conflict = conflictPool.get(i); 
+			Team currentTeam = conflict.team; 
+			
+			 for (currScoutIndex = 0; currScoutIndex < numScouts; currScoutIndex++) {
+				 
+				 if (schedule.getConflicts(currentTeam, scoutList.get(currScoutIndex).getTeamList()).size() == 0) {
+					 scoutList.get(currScoutIndex).addTeam(currentTeam); 
+					 System.out.println("Prevented a conflict!");
+					 conflictPool.remove(i); 
+					 i--; 
+					 break; 
+				 }
+			 }
+			}  makingProgress = conflictPool.size() < sizeBefore; 
 		} 
-		finally {
-			scanner.close();
+		
+		System.out.println("About to place the last few teams.");
+
+		/*
+		 * Now we just need to assign the rest of the teams, 
+		 * which unfortunitely we can't avoid conflicts with.
+		 * 
+		 * We can use this to try and even out the lists so they have
+		 * about the same number of teams / scout list. 
+		 */
+		for (Conflict c : conflictPool) {
+			currScoutIndex = findShortestList(scoutList); 
+			scoutList.get(currScoutIndex).addTeam(c.team); 
 		}
-	}  
-
-	private void pickFile() {
-
-		JFileChooser chooser = new JFileChooser(); 
-
-		int response = chooser.showOpenDialog(null);
-
-		if (response == JFileChooser.APPROVE_OPTION) 
-			matchSchedFile = chooser.getSelectedFile();
-		else {
-			JOptionPane.showMessageDialog(null, "You must pick a file to parse...");
-
-			int tryAgain = JOptionPane.showConfirmDialog(chooser, "try again?"); 
-
-			if (tryAgain == JOptionPane.YES_OPTION)
-				pickFile(); //try again
-			else {
-				System.err.println("failed to load csvString, closing program.");
-				System.exit(0); 
-			}
-		}
+		
+		System.out.println("Could not place " + conflictPool.size() + " teams.");
+		
+		return scoutList; 
 	}
+	
+	private static int findShortestList(ArrayList<Scout> lists) {
+		int shortest = lists.get(0).getTeamList().size(); 
+		for (int i = 1; i < lists.size(); i++) 
+			if (lists.get(i).getTeamList().size() < shortest)
+				shortest = lists.get(i).getTeamList().size(); 
+		return shortest; 
+	}
+	
+	private static ArrayList<Scout> copyList(ArrayList<Scout> toClone) {
+		ArrayList<Scout> returnList = new ArrayList<>(); 
+		for (Scout s : toClone)
+			returnList.add(s); 
+		return returnList; 
+	}
+	
+	private static int nextScoutPos(int currPos, int numScouts) {
+		return ++currPos % numScouts; 
+	}
+	
+	private static ArrayList<Scout> createScoutList(int numScouts) {
+		
+		ArrayList<Scout> scouts = new ArrayList<>(); 
+		
+		for (int i = 0; i < numScouts; i++) 
+			scouts.add(new Scout()); 
+		
+		return scouts; 
+	}
+	
 }

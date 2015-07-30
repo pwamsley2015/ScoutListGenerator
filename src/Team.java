@@ -29,7 +29,7 @@ public class Team {
 	public Team(int teamNum) {
 		this.teamNum = teamNum; 
 		assignPowerHouse(); 
-		
+		matches = new ArrayList<Match>(); 
 		causesConflict = false; 
 	}
 	
@@ -56,12 +56,8 @@ public class Team {
 		return "" + teamNum;
 	}
 
-	public void setMatches(ArrayList<Match> matches) {
-		if (matches == null)
-			throw new NullPointerException(
-					"Tried to assign a null list of matches to team: "
-							+ this.teamNum); 
-		this.matches = new ArrayList<Match>(new HashSet<Match>(matches)); //make sure no duplicates
+	public boolean addMatch(Match matchIn) {
+		return matches.add(matchIn); 
 	}
 	
 	public ArrayList<Match> getMatchesIn() {

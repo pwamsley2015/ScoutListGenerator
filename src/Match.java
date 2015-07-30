@@ -20,6 +20,11 @@ public class Match {
 		this(matchNum, new ArrayList<Team>(Arrays.asList(teams))); 
 	}
 	
+	@Override
+	public int hashCode() {
+		return matchNum; //hack so we can use sets later and not have duplicates
+	}
+	
 	@Override 
 	public String toString() {
 		return "Match " + matchNum + ": " + teamsInMatch.toString();
