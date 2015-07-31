@@ -28,6 +28,10 @@ public class Scout {
 	}
 	
 	public boolean addTeam(Team t) {
+		
+		if (teamsScouted.contains(t))
+			return false; 
+		
 		System.out.println("Added a team to a scout list!");
 		teamsScouted.add(t);
 		return teamsToScout.add(t); 

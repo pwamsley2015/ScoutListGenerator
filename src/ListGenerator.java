@@ -80,10 +80,11 @@ public class ListGenerator {
 			
 		for (Match currMatch : schedule.getMatches()) {
 			for (Team currTeam : currMatch.getTeamsInMatch()) {
+				
 				ArrayList<Team> conflicts = schedule.getConflicts(currTeam, scoutList.get(currScoutIndex).getTeamList());
-				if (Scout.isScouted(currTeam)) //if we've already taken care of this team, skip it.
-					continue; 
-				else if (conflicts.size() != 0) //else if (there are conflicts) ...
+//				if (Scout.isScouted(currTeam)) //if we've already taken care of this team, skip it.
+//					continue; // This is now taken care of in the scout.addTeam(t) method. 
+				if (conflicts.size() != 0) //else if (there are conflicts) ...
 					conflictPool.add(new Conflict(currMatch, currTeam, conflicts, scoutList.get(currScoutIndex))); //add to the conflictPool. We'll deal with them later.
 				else {
 					scoutList.get(currScoutIndex).addTeam(currTeam); //Othersize, we assign this Team to a scout. 
@@ -141,11 +142,17 @@ public class ListGenerator {
 	}
 	
 	private static int findShortestList(ArrayList<Scout> lists) {
-		int shortest = lists.get(0).getTeamList().size(); 
-		for (int i = 1; i < lists.size(); i++) 
-			if (lists.get(i).getTeamList().size() < shortest)
+		
+		int shortest = Integer.MAX_VALUE, indexOfShortest = 0; 
+		
+		for (int i = 0; i < lists.size(); i++) {
+			if (lists.get(i).getTeamList().size() < shortest) {
 				shortest = lists.get(i).getTeamList().size(); 
-		return shortest; 
+				indexOfShortest = i; 
+			}
+		}
+		
+		return indexOfShortest; 
 	}
 	
 	private static ArrayList<Scout> copyList(ArrayList<Scout> toClone) {
