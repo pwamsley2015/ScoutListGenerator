@@ -1,5 +1,9 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Scanner;
+
 
 
 /**
@@ -13,34 +17,57 @@ public class Team {
 	private ArrayList<Match> matches; 
 
 	private boolean isPowerHouseTeam; 
-	
-	private boolean causesConflict; 
 
-	private static int[] POWER_HOUSE_TEAMS = 
-		{2485, 987, 254, 3476
-		, 118, 1114, 2056, 33, 27 
-		, 148, 67, 1986, 16 
-		, 610, 1241, 469, 971
-		, 1477, 359, 125, 1285
-		, 368, 233, 188, 217, 71
-		, 111, 1538, 1717, 25, 399
-		, 51, 1983, 1678, 330, 294}; 
+	private static ArrayList<Integer> POWER_HOUSE_TEAMS = loadPowerHouseTeams(); 
 
 	public Team(int teamNum) {
 		this.teamNum = teamNum; 
 		assignPowerHouse(); 
 		matches = new ArrayList<Match>(); 
-		causesConflict = false; 
 	}
 	
-	public boolean isConflict() {
-		return causesConflict; 
-	}
-	
-	public void setCausesConflict(boolean b) {
-		causesConflict = b; 
-	}
+	private static ArrayList<Integer> loadPowerHouseTeams() {
+		
+		File file = new File("PowerhouseTeams.2485file"); 
+		String rawCSV = ""; 
+		
+		StringBuilder fileContents = new StringBuilder((int)file.length()); 
+		Scanner scanner = null;
+		
+		try {
+			scanner = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} 
+		
+		String lineSeperator = "\n"; 
 
+		try {
+			while (scanner.hasNextLine()) 
+				fileContents.append(scanner.nextLine() + lineSeperator);
+			rawCSV = fileContents.toString(); 
+		} finally {
+			scanner.close();
+		}
+		
+		ArrayList<Integer> teamNumbers = new ArrayList<>(); 
+		
+		while (true) {
+			try {
+				String firstNum = rawCSV.substring(0, rawCSV.indexOf(',')); //get the number
+				teamNumbers.add(Integer.parseInt(firstNum)); //add the team
+				rawCSV = rawCSV.substring(rawCSV.indexOf(',') + 1); //remove that number from the list
+			} catch (IndexOutOfBoundsException e) {
+				teamNumbers.add(Integer.parseInt(rawCSV)); //need to get the last team
+				break; 
+			}
+		}
+		
+		System.out.println(teamNumbers);
+		
+		return teamNumbers;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof Team))
