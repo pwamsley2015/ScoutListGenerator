@@ -12,7 +12,7 @@ public class ListGenerator {
 
 		if (args.length != 2)
 			throw new IllegalArgumentException("Did not call this program correctly. \n "
-					+ "Command Line all must be as follows: java -j ListGenerator.jar filePathToCSV numScouts \n"); 
+					+ "Command Line all must be as follows: java ListGenerator filePathToCSV numScouts \n"); 
 		
 		/*
 		 * First, fill up an instance of Schedule
@@ -46,6 +46,14 @@ public class ListGenerator {
 
 	}
 	
+	/**
+	 * Generates a list of {@code Scout}s where each Scout 
+	 * object contains a completed list of teams. 
+	 * 
+	 * @param Number of scouts (or really, number of scouting lists to be made)
+	 * @param an instance of an Schedule object
+	 * @return the completed list
+	 */
 	private static ArrayList<Scout> generateLists(int numScouts, Schedule schedule) {
 		
 		/*
@@ -141,6 +149,9 @@ public class ListGenerator {
 		return scoutList; 
 	}
 	
+	/**
+	 * @return Index of the list with the fewest amount of teams
+	 */
 	private static int findShortestList(ArrayList<Scout> lists) {
 		
 		int shortest = Integer.MAX_VALUE, indexOfShortest = 0; 
@@ -154,18 +165,17 @@ public class ListGenerator {
 		
 		return indexOfShortest; 
 	}
-	
-	private static ArrayList<Scout> copyList(ArrayList<Scout> toClone) {
-		ArrayList<Scout> returnList = new ArrayList<>(); 
-		for (Scout s : toClone)
-			returnList.add(s); 
-		return returnList; 
-	}
-	
+
 	private static int nextScoutPos(int currPos, int numScouts) {
 		return ++currPos % numScouts; 
 	}
 	
+	/**
+	 * Creates a new list of new Scouts objects
+	 * 
+	 * @param Number of scouts
+	 * @return list with newly init'd Scouts
+	 */
 	private static ArrayList<Scout> createScoutList(int numScouts) {
 		
 		ArrayList<Scout> scouts = new ArrayList<>(); 

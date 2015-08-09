@@ -8,11 +8,14 @@ import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 
 /**
- * @author Patrick Wamsley
  * This class is used to print lists
+ * @author Patrick Wamsley
  */
 public class ListCard implements Printable {
 
+	/**
+	 * The list of teams for the scout to scout
+	 */
 	private ArrayList<Team> listCard; 
 
 	public ListCard(ArrayList<Team> teams) {
@@ -20,6 +23,9 @@ public class ListCard implements Printable {
 		listCard = teams; 
 	}
 
+	/**
+	 * Creates an image using {@code java.awt.Graphics} so the list can be printed. 
+	 */
 	@Override
 	public int print(Graphics g, PageFormat pageFormat, int pageIndex) 
 			throws PrinterException {
@@ -43,6 +49,10 @@ public class ListCard implements Printable {
 		}
 		return PAGE_EXISTS;
 	}
+	
+	/**
+	 * Prints the list to the selected printer. 
+	 */
 	public void printCard() {
 
 		PrinterJob job = PrinterJob.getPrinterJob();

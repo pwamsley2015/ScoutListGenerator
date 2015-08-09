@@ -14,7 +14,7 @@ public class Conflict {
 	public final Team team; 
 	public final Match match;
 	public final Scout scout; 
-	
+
 	public Conflict(Match match, Team team, ArrayList<Team> teams, Scout scout) {
 		this.team 	= team; 
 		this.match 	= match; 

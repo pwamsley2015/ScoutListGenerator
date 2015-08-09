@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * @author Patrick Wamsley
  *
- * Represents a Scout
+ * Represents a Scout and contains a list of Teams that they will need to scout. 
  */
 
 public class Scout {

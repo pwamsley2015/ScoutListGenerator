@@ -9,7 +9,7 @@ import java.util.Scanner;
 /**
  * @author Patrick Wamsley
  *
- * This class represents a Team
+ * Represents a Team
  */
 public class Team {
 
@@ -18,54 +18,12 @@ public class Team {
 
 	private boolean isPowerHouseTeam; 
 
-	private static ArrayList<Integer> POWER_HOUSE_TEAMS = loadPowerHouseTeams(); 
+	private static final ArrayList<Integer> POWER_HOUSE_TEAMS = CSV_Parser.loadPowerHouseTeams(); 
 
 	public Team(int teamNum) {
 		this.teamNum = teamNum; 
 		assignPowerHouse(); 
 		matches = new ArrayList<Match>(); 
-	}
-	
-	private static ArrayList<Integer> loadPowerHouseTeams() {
-		
-		File file = new File("PowerhouseTeams.2485file"); 
-		String rawCSV = ""; 
-		
-		StringBuilder fileContents = new StringBuilder((int)file.length()); 
-		Scanner scanner = null;
-		
-		try {
-			scanner = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} 
-		
-		String lineSeperator = "\n"; 
-
-		try {
-			while (scanner.hasNextLine()) 
-				fileContents.append(scanner.nextLine() + lineSeperator);
-			rawCSV = fileContents.toString(); 
-		} finally {
-			scanner.close();
-		}
-		
-		ArrayList<Integer> teamNumbers = new ArrayList<>(); 
-		
-		while (true) {
-			try {
-				String firstNum = rawCSV.substring(0, rawCSV.indexOf(',')); //get the number
-				teamNumbers.add(Integer.parseInt(firstNum)); //add the team
-				rawCSV = rawCSV.substring(rawCSV.indexOf(',') + 1); //remove that number from the list
-			} catch (IndexOutOfBoundsException e) {
-				teamNumbers.add(Integer.parseInt(rawCSV)); //need to get the last team
-				break; 
-			}
-		}
-		
-		System.out.println(teamNumbers);
-		
-		return teamNumbers;
 	}
 	
 	@Override

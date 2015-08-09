@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
+/**
+ * Represents a match, with a match number and a list of teams playing. 
+ * 
+ * @author Patrick Wamsley
+ */
 public class Match {
 
 	private ArrayList<Team> teamsInMatch; 
