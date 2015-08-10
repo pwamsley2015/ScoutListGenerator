@@ -25,11 +25,11 @@ Picture: ![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/mas
 
  	- Open Terminal or Command Prompt 
  	- Change the directory to the projects src folder. 
- 	    `cd documents/programming/ScoutListGenerator/src`
+ 	`cd documents/programming/ScoutListGenerator/src`
  	- Compile all the .java files
  	     `javac *.java`
- 	     Note: The reason we recompile these files, rather than just using the ones in /bin/ is to avoid a MainClassNotFoundException causes by the eclipse compiler working differently than javac. 
+ 	     Note: The reason we recompile these files, rather than just using the ones in /bin/ is to avoid a 'MainClassNotFoundException' causes by the eclipse compiler working differently than javac. 
  	- Run java with the follow paramaters: 
- 	    java ListGenerator filePathToSchedule numberOfScouts
+ 	    'java ListGenerator filePathToSchedule numberOfScouts'
 
  - Once the program runs, just follow dialogs given by the program until the lists print (either to the console or to the default printer). 
