@@ -9,11 +9,20 @@ Using this is a few step process.
 ![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/highlighting.png)
 
 - Next, Paste the table into the spreadsheet. Remove every column except for match number and the teams in the match.
+
 ![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/in%20ss.png)
 
 - Export the spreadsheet as a .csv file.
 ![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/Screen%20Shot%202015-08-10%20at%203.11.35%20PM.png)
 
+![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/highlighting.png)
+
+- Next, Paste the table into the spreadsheet. Remove every column except for match number and the teams in the match. 
+Picture: ![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/in%20ss.png)
+
+- Export the spreadsheet as a .csv file. 
+
+Picture:![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/Screen%20Shot%202015-08-10%20at%203.11.35%20PM.png)
 
 - Next, in your text editor of choice, edit check the PowerhouseTeams.csv (found in the project folder) to match the scouting team's prefriday opinions. 
 
