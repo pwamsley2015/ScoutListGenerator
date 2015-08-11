@@ -15,16 +15,7 @@ Using this is a few step process.
 - Export the spreadsheet as a .csv file.
 ![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/Screen%20Shot%202015-08-10%20at%203.11.35%20PM.png)
 
-![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/highlighting.png)
-
-- Next, Paste the table into the spreadsheet. Remove every column except for match number and the teams in the match. 
-Picture: ![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/in%20ss.png)
-
-- Export the spreadsheet as a .csv file. 
-
-Picture:![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/Screen%20Shot%202015-08-10%20at%203.11.35%20PM.png)
-
-- Next, in your text editor of choice, edit check the PowerhouseTeams.csv (found in the project folder) to match the scouting team's prefriday opinions. 
+- Next (or well in advance), in your text editor of choice, edit check the PowerhouseTeams.csv (found in the project folder) to match the scouting team's prefriday opinions. 
 
 - Now you have to actually run the program. The program takes paramaters from the command line as such:
 
@@ -33,12 +24,16 @@ Picture:![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/mast
  How to run, step by step: 
 
  	- Open Terminal or Command Prompt 
- 	- Change the directory to the projects src folder. 
+ 	- Change the directory to the projects src folder.
+
  	`cd documents/programming/ScoutListGenerator/src`
- 	- Compile all the .java files
+ 	- Compile all the `.java` files
+
  	     `javac *.java`
- 	     Note: The reason we recompile these files, rather than just using the ones in /bin/ is to avoid a 'MainClassNotFoundException' causes by the eclipse compiler working differently than javac. 
+
+ 	     Note: The reason we recompile these files, rather than just using the ones in `/bin/` is to avoid a `MainClassNotFoundException` causes by the eclipse compiler working differently than javac. 
  	- Run java with the follow paramaters: 
- 	    'java ListGenerator filePathToSchedule numberOfScouts'
+
+ 	`java ListGenerator filePathToSchedule numberOfScouts`
 
  - Once the program runs, just follow dialogs given by the program until the lists print (either to the console or to the default printer). 
