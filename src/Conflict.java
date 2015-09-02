@@ -3,6 +3,9 @@ import java.util.ArrayList;
 /**
  * Data structure which represents a Conflict. <p>
  * 
+ * A Conflict is a case where a Scout would have to scout more than 1 team in the same game,
+ * which is something this program tries to avoid (kind of the whole point). 
+ * 
  * Note: 49 / 50 times, a conflict will have 2 teams, though there could be up to 6, 
  * so thats why this takes an array of Teams. 
  * 

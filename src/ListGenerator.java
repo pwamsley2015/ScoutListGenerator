@@ -103,6 +103,8 @@ public class ListGenerator {
 
 		System.out.println("Placed the first round of other teams!");
 
+		System.out.println(conflictPool.size() + " conflicts left to solve... gl sched.");
+		
 		/*
 		 * At this point, all of the teams are either
 		 * assigned to a scout, or kept in the conflits pool. 
@@ -120,8 +122,17 @@ public class ListGenerator {
 				Conflict conflict = conflictPool.get(i); 
 				Team currentTeam = conflict.team; 
 
-				for (currScoutIndex = 0; currScoutIndex < numScouts; currScoutIndex++) {
+				int shortestListIndex = findShortestList(scoutList);
+				boolean firstRun = true; 
+				
+				for (currScoutIndex = shortestListIndex; currScoutIndex < numScouts; 
+						currScoutIndex = nextScoutPos(currScoutIndex, numScouts)) {
 
+					if (!firstRun && currScoutIndex == shortestListIndex) //went around and got no where
+						break;
+					
+					firstRun = false; 
+					
 					if (schedule.getConflicts(currentTeam, scoutList.get(currScoutIndex).getTeamList()).size() == 0) {
 						scoutList.get(currScoutIndex).addTeam(currentTeam); 
 						System.out.println("Prevented a conflict!");
@@ -148,7 +159,7 @@ public class ListGenerator {
 		}
 
 		System.out.println("Could not place " + conflictPool.size() + " teams.");
-
+		
 		return scoutList; 
 	}
 
