@@ -96,9 +96,6 @@ public class CSV_Parser {
 				break; 
 			}
 		}
-
-		System.out.println(teamNumbers);
-
 		return teamNumbers;
 	}
 
@@ -115,8 +112,9 @@ public class CSV_Parser {
 		try {
 			while (scanner.hasNextLine())
 				fileContents.append(scanner.nextLine() + lineSeperator);
-
 			CSV_String = fileContents.toString(); 
+			//remove the added "\n" 
+			CSV_String = CSV_String.substring(0, CSV_String.length() - 1); 
 		} finally {
 			scanner.close();
 		}

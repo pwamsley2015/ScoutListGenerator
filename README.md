@@ -31,8 +31,8 @@ Using this is a few step process.
 
  	     `javac *.java`
 
- 	     Note: The reason we recompile these files, rather than just using the ones in `/bin/` is to avoid a `MainClassNotFoundException` causes by the eclipse compiler working differently than javac. 
- 	- Run java with the follow paramaters: 
+ 	     Note: The reason we recompile these files, rather than just using the ones in `/bin/` is to avoid a `MainClassNotFoundException` caused by the eclipse compiler working differently than javac. 
+ 	- Run java with the following paramaters: 
 
  	`java ListGenerator filePathToSchedule numberOfScouts`
 

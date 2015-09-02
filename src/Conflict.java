@@ -20,6 +20,15 @@ public class Conflict {
 		this.match 	= match; 
 		this.scout 	= scout;
 		this.teamsThatConflict = teams;
-	} 
+	}
+
+	//AUTO-GENERATED CODE
+	@Override
+	public String toString() {
+		return "Conflict [teamsThatConflict=" + teamsThatConflict + ", team="
+				+ team + ", match=" + match + ", scout=" + scout + "]";
+	}
+	
+	
 }
 

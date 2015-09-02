@@ -56,9 +56,9 @@ public class Schedule {
 
 		for (Team otherTeam : scoutTeamList)
 			for (Match match : teamToCheck.getMatchesIn())
-				if (match.getTeamsInMatch().contains(teamToCheck))
+				if (match.getTeamsInMatch().contains(otherTeam))
 					conflictingTeams.add(otherTeam); 
-
+	
 		return conflictingTeams; 
 	}
 }
