@@ -34,10 +34,10 @@ public class ListGenerator {
 		 * If yes, print. Otherwise we will just print to the console. 
 		 */
 		if (okayToPrint == JOptionPane.YES_OPTION) {
-			//			for (ArrayList<Team> list : lists) {
-			//				ListCard cardToPrint = new ListCard(list); 
-			//				cardToPrint.printCard();
-			//			}
+			for (Scout s : scoutList) {
+				ListCard cardToPrint = new ListCard(s.getTeamList()); 
+				cardToPrint.printCard();
+			}
 		} else {
 			System.out.println("\nWas not allowed to print lists, printing lists to console instead.\n\n\n");
 			for (Scout list : scoutList) 
