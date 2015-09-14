@@ -1,10 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
-
-
 
 /**
  * @author Patrick Wamsley
@@ -18,7 +12,7 @@ public class Team {
 
 	private boolean isPowerHouseTeam; 
 
-	private static final ArrayList<Integer> POWER_HOUSE_TEAMS = CSV_Parser.loadPowerHouseTeams(); 
+	private static ArrayList<Integer> POWER_HOUSE_TEAMS; 
 
 	public Team(int teamNum) {
 		this.teamNum = teamNum; 
@@ -62,7 +56,12 @@ public class Team {
 		}
 		isPowerHouseTeam = inList; 
 	}
+	
 	public boolean isPowerHouseTeam() {
 		return isPowerHouseTeam; 
+	}
+	
+	public static void setPowerHouseTeam(ArrayList<Integer> nums) {
+		POWER_HOUSE_TEAMS = nums; 
 	}
 }

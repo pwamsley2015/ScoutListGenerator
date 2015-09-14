@@ -6,23 +6,29 @@ import javax.swing.JOptionPane;
 public class ListGenerator {
 
 	/**
-	 * @param optional arguements from command line: filePath numScouts
+	 * @param arguements from command line: filePathToSchedule filePathToPowerhouseTeams numScouts
 	 */
 	public static void main(String[] args) {
 
-		if (args.length != 2)
+		if (args.length != 3)
 			throw new IllegalArgumentException("Did not call this program correctly. \n "
-					+ "Command Line all must be as follows: java ListGenerator filePathToCSV numScouts \n"); 
+					+ "Command Line all must be as follows: java ListGenerator filePathToCSV filePathToPowerhouseTeamsCSV numScouts \n"); 
 
 		/*
-		 * First, fill up an instance of Schedule
+		 * First, get the Powerhouse Teams
+		 */
+		ArrayList<Integer> powerhouseTeamNumbers = CSV_Parser.loadPowerHouseTeams(args[1]);
+		Team.setPowerHouseTeam(powerhouseTeamNumbers); 
+		
+		/*
+		 * Then, fill up an instance of Schedule
 		 */
 		final Schedule schedule = new Schedule(CSV_Parser.getMatchSchedule(args[0])); 
 
 		/*
 		 * Then geneate the list. 
 		 */
-		ArrayList<Scout> scoutList = generateLists(Integer.parseInt(args[1]), schedule);
+		ArrayList<Scout> scoutList = generateLists(Integer.parseInt(args[2]), schedule);
 
 		/*
 		 * Then ask if its okay to print to the default printer.

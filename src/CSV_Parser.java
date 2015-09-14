@@ -31,7 +31,7 @@ public class CSV_Parser {
 			CSV_String = ":("; 
 			e1.printStackTrace();
 		}
-
+		
 		ArrayList<String> lines = new ArrayList<>(); 
 		ArrayList<Match> returnList = new ArrayList<>(); 
 
@@ -46,7 +46,7 @@ public class CSV_Parser {
 				break; 
 			}
 		}
-
+		
 		int curr = 0; 
 		while (true) {
 			try {
@@ -65,7 +65,7 @@ public class CSV_Parser {
 			}
 			curr++; 
 		}
-
+		
 		return returnList; 
 	}
 
@@ -75,11 +75,11 @@ public class CSV_Parser {
 	 * 
 	 * @return ArrayList of Integer containing team numers of power house teams. 
 	 */
-	public static ArrayList<Integer> loadPowerHouseTeams() {
+	public static ArrayList<Integer> loadPowerHouseTeams(String filePath) {
 
 		String rawCSV = "";
 		try {
-			rawCSV = getFileContents("PowerhouseTeams.csv");
+			rawCSV = getFileContents(filePath);
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		} 

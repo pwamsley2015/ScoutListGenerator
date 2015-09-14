@@ -4,7 +4,7 @@ Generates team lists for scouts.
 How to use!
 
 Using this is a few step process. 
-- First, when the schedule comes out on thebluealliance.com, navigate to the schedule page. Highlight the table, then open up a new google sheets spreadsheet. 
+- First, when the schedule comes out on [The Blue Aliance](https://www.thebluealliance.com), navigate to the schedule page. Highlight the table, then open up a new google sheets spreadsheet. 
 
 ![Alt text](https://github.com/pwamsley2015/ScoutListGenerator/blob/master/readme_screenshots/highlighting.png)
 
@@ -19,21 +19,19 @@ Using this is a few step process.
 
 - Now you have to actually run the program. The program takes paramaters from the command line as such:
 
- java ListGenerator filePath NumberOfScouts
+ java ListGenerator filePathToScheduleCSV filePathToPowerhouseTeamsCSV numberOfScouts
 
  How to run, step by step: 
 
+    - You'll probably have to recompiile all the .java files because we use different machines. You can do this with either `javac .java` or by just opening up the project in eclipse and clicking Project -> Clean... -> OK
+
  	- Open Terminal or Command Prompt 
- 	- Change the directory to the projects src folder.
+ 	- Change the directory to the projects bin folder.
 
- 	`cd documents/programming/ScoutListGenerator/src`
- 	- Compile all the `.java` files
+ 	`cd MySuperAwesomeFolderName/Programming/ScoutListGenerator/bin`
+ 	
+ 	- Then run java with the following paramaters: 
 
- 	     `javac *.java`
-
- 	     Note: The reason we recompile these files, rather than just using the ones in `/bin/` is to avoid a `MainClassNotFoundException` caused by the eclipse compiler working differently than javac. 
- 	- Run java with the following paramaters: 
-
- 	`java ListGenerator filePathToSchedule numberOfScouts`
+ 	`java ListGenerator filePathToScheduleCSV filePathToPowerhouseTeamsCSV numberOfScouts`
 
  - Once the program runs, just follow dialogs given by the program until the lists print (either to the console or to the default printer). 
