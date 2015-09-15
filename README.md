@@ -23,7 +23,7 @@ Using this is a few step process.
 
  How to run, step by step: 
 
-    - You'll probably have to recompiile all the .java files because we use different machines. You can do this with either `javac .java` or by just opening up the project in eclipse and clicking Project -> Clean... -> OK
+    - You'll probably have to recompiile all the .java files because we use different machines. You can do this with either `javac *.java` or by just opening up the project in eclipse and clicking Project -> Clean... -> OK
 
  	- Open Terminal or Command Prompt 
  	- Change the directory to the projects bin folder.
